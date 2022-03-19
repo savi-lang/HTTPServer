@@ -26,3 +26,7 @@
 #
 # Add any custom rules you need below this comment.
 # The area above this comment is reserved for future standard rules.
+
+# Ignore binary executables and dependencies for examples.
+examples/*/bin
+examples/*/deps

@@ -46,3 +46,18 @@ jobs:
   #
   # Add any custom jobs you need below this comment.
   # The area above this comment is reserved for future standard jobs.
+
+  # Run some integration tests using a binary that writes its stdin to stdout,
+  # and prints information about `IO.Action`s to stderr.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: savi-lang/action-install@v1.0.0
+      - run: savi deps update --cd examples/simple
+      - run: savi build --cd examples/simple --backtrace
+
+      - name: Curl request to simple HTTP server example
+        run: |
+          examples/simple/bin/http-example &
+          sh -exc 'sleep 1; curl -v --fail http://localhost:8080'
