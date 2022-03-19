@@ -1,0 +1,58 @@
+:actor Main
+  :new (env)
+    MyHTTPListener.new(env, TCP.auth(env.root).listen.on("0.0.0.0", "8080"))
+
+:actor MyHTTPListener
+  :is IO.Actor(IO.Action) // TODO: remove type argument?
+  :let env Env
+  :let io TCP.Listen.Engine
+  :new (@env, ticket)
+    @io = TCP.Listen.Engine.new(@, --ticket)
+
+  :fun ref io_react(action IO.Action)
+    case action == (
+    | IO.Action.Opened |
+      @env.out.print("[Listener] Listening on port:")
+      @env.out.print(Inspect[@io.listen_port_number])
+    | IO.Action.OpenFailed |
+      @env.out.print("[Listener] Not listening:")
+      @env.out.print(@io.listen_error.name)
+    | IO.Action.Read |
+      @io.pending_connections -> (ticket |
+        HTTPConnection.new(@env, --ticket)
+      )
+    | IO.Action.Closed |
+      @env.out.print("[Listener] Stopped listening")
+    )
+    @
+
+:actor HTTPConnection
+  :is IO.Actor(IO.Action)
+  :let env Env
+  :let io TCP.Engine
+  :let reader: HTTPServer.RequestReader.new
+
+  :new (@env, ticket)
+    @io = TCP.Engine.accept(@, --ticket)
+
+  :fun ref io_react(action IO.Action)
+    case action == (
+    | IO.Action.Read |
+      @io.pending_reads -> (data |
+        try (
+          request = @reader.read!(@io.read_stream)
+
+          response = HTTPServer.ResponseBuilder.new(@io.write_stream)
+
+          response
+            .status_ok
+            .header("Content-Length", "0")
+            .finish
+
+          try @io.flush!
+        )
+      )
+    | IO.Action.Write |
+      try @io.flush!
+    )
+    @
