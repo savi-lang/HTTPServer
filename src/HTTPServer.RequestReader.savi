@@ -7,25 +7,23 @@
   :var connection_header: HTTPServer.Request.ConnectionHeader.KeepAlive // TODO: default to Close for HTTP/1.0
 
 :enum HTTPServer.Request.TransferEncoding
-  :const bit_width U8: 1
-  :member HTTPServer.Request.TransferEncoding.Identity: 0
-  :member HTTPServer.Request.TransferEncoding.Chunked: 1
+  :bit_width 1
+  :member Identity 0
+  :member Chunked 1
 
 :enum HTTPServer.Request.ConnectionHeader
-  :const bit_width U8: 1
-  :member HTTPServer.Request.ConnectionHeader.Close: 0
-  :member HTTPServer.Request.ConnectionHeader.KeepAlive: 1
+  :bit_width 1
+  :member Close 0
+  :member KeepAlive 1
 
-:enum HTTPServer.Request.Error // TODO: compile error when multiple members same value?
-  :const bit_width U8: 8
-  // TODO: Enums with short member names using a Swift-like leading dot syntax
-  :member HTTPServer.Request.Error.None: 0
-  :member HTTPServer.Request.Error.UnsupportedMethod: 1
-  :member HTTPServer.Request.Error.URITooLong: 2
-  :member HTTPServer.Request.Error.UnsupportedVersion: 3
-  :member HTTPServer.Request.Error.UnsupportedTransferEncoding: 4
-  :member HTTPServer.Request.Error.UnsupportedConnectionHeader: 5
-  :member HTTPServer.Request.Error.InvalidContentLength: 6
+:enum HTTPServer.Request.Error
+  :member None 0
+  :member UnsupportedMethod 1
+  :member URITooLong 2
+  :member UnsupportedVersion 3
+  :member UnsupportedTransferEncoding 4
+  :member UnsupportedConnectionHeader 5
+  :member InvalidContentLength 6
 
 :class HTTPServer.RequestReader
   // These headers have a special meaning for an action we need to take here.

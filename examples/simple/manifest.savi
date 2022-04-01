@@ -2,7 +2,7 @@
   :sources "src/*.savi"
 
   :dependency HTTPServer v0
-    :from "github:savi-lang/HTTPServer"
+    :from "relative:../.."
     :depends on ByteStream
 
   :dependency TCP v0
