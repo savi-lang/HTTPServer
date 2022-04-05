@@ -12,8 +12,9 @@
   :fun ref io_react(action IO.Action)
     case action == (
     | IO.Action.Opened |
-      @env.out.print("[Listener] Listening on port:")
-      @env.out.print(Inspect[@io.listen_port_number])
+      @env.out.print("[Listener] Listening on: \(
+        try (@io.listen_address_with_port_number! | "???")
+      )")
     | IO.Action.OpenFailed |
       @env.out.print("[Listener] Not listening:")
       @env.out.print(@io.listen_error.name)
