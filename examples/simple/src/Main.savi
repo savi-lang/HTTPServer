@@ -39,19 +39,17 @@
   :fun ref io_react(action IO.Action)
     case action == (
     | IO.Action.Read |
-      @io.pending_reads -> (data |
-        try (
-          request = @reader.read!(@io.read_stream)
+      try (
+        request = @reader.read!(@io.read_stream)
 
-          response = HTTPServer.ResponseBuilder.new(@io.write_stream)
+        response = HTTPServer.ResponseBuilder.new(@io.write_stream)
 
-          response
-            .status_ok
-            .header("Content-Length", "0")
-            .finish
+        response
+          .status_ok
+          .header("Content-Length", "0")
+          .finish
 
-          try @io.flush!
-        )
+        try @io.flush!
       )
     | IO.Action.Write |
       try @io.flush!
