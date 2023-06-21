@@ -91,7 +91,7 @@
           |
             // Check to see if there is an error present.
             // If so, store it and mark as having finished too soon.
-            if (reader.last_error != HTTPServer.Request.Error.None) (
+            if reader.last_error != HTTPServer.Request.Error.None (
               saw_error = reader.last_error
               finished_too_soon = True
             )
@@ -106,7 +106,7 @@
       // If we finished too soon, there was either an error to show,
       // or the parser failed to consume all of the chunks before finishing.
       @env.err.write("\nexpected "), @env.err.write(Inspect[source_chunks])
-      if (saw_error == HTTPServer.Request.Error.None) (
+      if saw_error == HTTPServer.Request.Error.None (
         @env.err.print(" to parse fully, but it finished too soon")
       |
         @env.err.write(" to not have an error, but it had error: ")
@@ -151,7 +151,7 @@
           |
             // Check to see if there is an error present.
             // If so, store it and mark as having finished too soon.
-            if (reader.last_error != HTTPServer.Request.Error.None) (
+            if reader.last_error != HTTPServer.Request.Error.None (
               saw_error = reader.last_error
               finished_too_soon = True
             )

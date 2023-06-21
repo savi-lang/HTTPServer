@@ -24,7 +24,7 @@
   :fun ref parse!(stream ByteStream.Reader)
     :yields HTTPServer.RequestParser.Token
     try (
-      while (@_state != _RequestAt.End) (
+      while @_state != _RequestAt.End (
         @_state = case @_state == (
         | _RequestAt.Start |
           _RequestAt.Method
@@ -40,12 +40,12 @@
           _RequestAt.VersionString
         | _RequestAt.VersionString |
           stream.advance_while! -> (byte | byte != '\r')
-          if (stream.bytes_ahead < 2) error! // ensure the LF byte is ready too
+          if stream.bytes_ahead < 2 error! // ensure the LF byte is ready too
           yield HTTPServer.RequestParser.Token.VersionString
           stream.advance!(2) // consume the CRLF
           _RequestAt.HeaderLineMaybe
         | _RequestAt.HeaderLineMaybe |
-          if (stream.peek_byte! == '\r' && stream.peek_byte!(1) == '\n') (
+          if stream.peek_byte! == '\r' && stream.peek_byte!(1) == '\n' (
             stream.advance!(2)
             _RequestAt.End
           |
@@ -61,7 +61,7 @@
           _RequestAt.HeaderValue
         | _RequestAt.HeaderValue |
           stream.advance_while! -> (byte | byte != '\r')
-          if (stream.bytes_ahead < 2) error! // ensure the LF byte is ready too
+          if stream.bytes_ahead < 2 error! // ensure the LF byte is ready too
           yield HTTPServer.RequestParser.Token.HeaderValue
           stream.advance!(2) // consume the CRLF
           _RequestAt.HeaderLineMaybe
